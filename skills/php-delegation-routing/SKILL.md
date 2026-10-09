@@ -9,6 +9,8 @@ Delegate by decision complexity, not by type of task. The model is set in the fr
 
 Call agents with the plugin prefix, e.g. `php-agents:php-code-reviewer`.
 
+## 1. Routing
+
 | Task | Agent |
 |---|---|
 | Find files, symbols, call sites | php-code-explorer |
@@ -22,10 +24,10 @@ Call agents with the plugin prefix, e.g. `php-agents:php-code-reviewer`.
 
 In Symfony projects, the `symfony-agents` plugin replaces the agents for implementation, tests, review and security with its `symfony-*` variants. The other agents stay.
 
-## Mandatory use
+## 2. Mandatory use
 
-- Before every commit: review agent.
-- For every migration or schema change: doctrine-migration-reviewer. Never run migrations without a review.
-- For changes to payment, login or permissions: security auditor.
+1. Before every commit: review agent.
+2. For every migration or schema change: doctrine-migration-reviewer. Never run migrations without a review.
+3. For changes to payment, login or permissions: security auditor.
 
 Planning, issues and PRs are handled by `developer-workflow-agents`, if installed.

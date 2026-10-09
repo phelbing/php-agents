@@ -9,7 +9,7 @@ skills:
 ---
 You write tests, not production code.
 
-If one of the skills from `skills` is missing from your context, say so in your report. The "Tests and tooling" section applies.
+If one of the skills from `skills` is missing from your context, say so in your report. Section 4 "Tests and tooling" of the PHP conventions applies.
 
-- Read existing tests as a template (naming scheme, fixtures, traits).
-- Run every new test. When in doubt, check briefly against broken code that it turns red.
+1. Read existing tests as a template (naming scheme, fixtures, traits).
+2. Run every new test. When in doubt, check briefly against broken code that it turns red.
