@@ -7,8 +7,8 @@
 `php-agents` builds on `developer-workflow-agents`. The marketplaces of the dependencies must be added first, otherwise the plugin does not load:
 
 ```bash
-claude plugin marketplace add <owner>/developer-workflow-agents
-claude plugin marketplace add <owner>/php-agents
+claude plugin marketplace add phelbing/developer-workflow-agents
+claude plugin marketplace add phelbing/php-agents
 claude plugin install php-agents@php-agents
 ```
 
