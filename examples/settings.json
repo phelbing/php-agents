@@ -11,6 +11,7 @@
       "Bash(composer audit:*)"
     ],
     "deny": [
+      "Bash(docker compose down -v:*)",
       "Bash(rm -rf:*)",
       "Bash(ssh:*)",
       "Bash(scp:*)",

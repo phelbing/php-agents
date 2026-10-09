@@ -52,7 +52,7 @@ The skill is an own summary in own words. No texts or code examples are taken ov
 A plugin does not load a `CLAUDE.md` or permissions into the project. Both are provided as templates under `examples/`:
 
 - `examples/CLAUDE.template.md`: block for your own `CLAUDE.md`. Fill in the Docker service names and test commands.
-- `examples/settings.json`: permissions for `.claude/settings.json`. Allows `docker compose exec`, `composer audit` and read-only `git` commands, blocks `ssh`/`scp`/`rsync` and reading `.env*`. `docker compose exec` allows any command in the container and is meant for local development.
+- `examples/settings.json`: permissions for `.claude/settings.json`. Allows `docker compose exec`, `composer audit` and read-only `git` commands, blocks `docker compose down -v`, `ssh`/`scp`/`rsync` and reading `.env*`. `docker compose exec` allows any command in the container and is meant for local development.
 
 ## Notes
 
