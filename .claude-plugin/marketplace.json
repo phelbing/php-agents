@@ -1,0 +1,17 @@
+{
+  "name": "php-agents",
+  "description": "8 Subagents mit Modell-Routing (haiku/sonnet/opus) für PHP und Doctrine: Code-Suche, Tests, Review, Migrationen, Sicherheit, Performance, dazu PHP-Konventionen und Entwurfsmuster-Skill",
+  "owner": {
+    "name": "Patrick"
+  },
+  "allowCrossMarketplaceDependenciesOn": [
+    "developer-workflow-agents"
+  ],
+  "plugins": [
+    {
+      "name": "php-agents",
+      "source": "./",
+      "description": "8 Subagents mit Modell-Routing (haiku/sonnet/opus) für PHP und Doctrine: Code-Suche, Tests, Review, Migrationen, Sicherheit, Performance, dazu PHP-Konventionen und Entwurfsmuster-Skill"
+    }
+  ]
+}
