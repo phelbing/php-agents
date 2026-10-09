@@ -18,12 +18,14 @@ The project's configuration and neighboring code take precedence (code style con
 - Use constructor promotion, named arguments when there are many parameters.
 - Strict comparisons (`===`), `==` only with a reason. Compare secrets with `hash_equals`.
 - Style according to PER Coding Style (successor of PSR-12), autoloading according to PSR-4.
+- Import every class with `use`, classes from the global namespace included: `use DateTimeInterface;` and then `?DateTimeInterface`, never `?\DateTimeInterface`. This covers type hints, `new`, `instanceof`, static calls and class constants. Not covered: class names inside strings and service ids in configuration.
 
 ## Design
 
 - Inject dependencies through the constructor. No `new` for services, no static calls with state, no global state.
 - Small classes with one job. Business logic belongs in domain or application services, not in controllers, console commands or listeners.
-- Own, meaningful exceptions instead of generic ones. Do not swallow errors, do not use exceptions for normal control flow.
+- No public properties. Every property is private, protected only where a subclass needs it, promoted constructor properties, entities and value objects included. Access from outside through a getter, and a getter only when there is a legitimate interest in the property. A property passed in as a constructor argument has that interest. Not covered: properties of test doubles declared inside a test file.
+- Own, meaningful exceptions instead of generic ones. Do not swallow errors, do not use exceptions for normal control flow. An empty `catch` block always carries a comment stating why swallowing the exception is intended.
 - Use `null` deliberately: return type `?Foo` only when "not present" is a normal case, otherwise an exception.
 - Design patterns only for a concrete problem. Reference: skill `php-agents:php-design-patterns`.
 
