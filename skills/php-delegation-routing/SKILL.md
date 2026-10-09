@@ -5,25 +5,27 @@ description: Use when delegating PHP work (code search, tests, implementation, r
 
 # Delegation (PHP)
 
-Delegiere nach Entscheidungskomplexität, nicht nach Aufgabenart. Das Modell steht im Frontmatter des jeweiligen Agents. Konventionen: Skill `php-agents:php-conventions`.
+Delegate by decision complexity, not by type of task. The model is set in the frontmatter of each agent. Conventions: skill `php-agents:php-conventions`.
 
-| Aufgabe | Agent |
+Call agents with the plugin prefix, e.g. `php-agents:php-code-reviewer`.
+
+| Task | Agent |
 |---|---|
-| Dateien, Symbole, Aufrufstellen finden | php-code-explorer |
-| Tests, PHPStan, ECS ausführen | php-test-runner |
-| Aufgabe mit klarem Plan umsetzen | php-implementer |
-| Tests schreiben | php-test-writer |
-| Diff prüfen | php-code-reviewer |
-| Doctrine-Migration oder Schema prüfen | doctrine-migration-reviewer |
-| Langsame Pfade finden | php-performance-analyst |
-| Sicherheitsprüfung | php-security-auditor |
+| Find files, symbols, call sites | php-code-explorer |
+| Run tests, PHPStan, ECS | php-test-runner |
+| Implement a task with a clear plan | php-implementer |
+| Write tests | php-test-writer |
+| Review a diff | php-code-reviewer |
+| Review a Doctrine migration or schema | doctrine-migration-reviewer |
+| Find slow paths | php-performance-analyst |
+| Security review | php-security-auditor |
 
-In Symfony-Projekten ersetzt das Plugin `symfony-agents` die Agents für Umsetzung, Tests, Review und Sicherheit durch seine `symfony-*`-Varianten. Die übrigen Agents bleiben.
+In Symfony projects, the `symfony-agents` plugin replaces the agents for implementation, tests, review and security with its `symfony-*` variants. The other agents stay.
 
-## Pflicht-Einsatz
+## Mandatory use
 
-- Vor jedem Commit: Review-Agent.
-- Bei jeder Migration oder Schema-Änderung: doctrine-migration-reviewer. Migrationen nie ohne Prüfung ausführen.
-- Bei Änderungen an Zahlung, Login oder Berechtigungen: Security-Auditor.
+- Before every commit: review agent.
+- For every migration or schema change: doctrine-migration-reviewer. Never run migrations without a review.
+- For changes to payment, login or permissions: security auditor.
 
-Planung, Issues und PRs übernimmt `developer-workflow-agents`, falls installiert.
+Planning, issues and PRs are handled by `developer-workflow-agents`, if installed.

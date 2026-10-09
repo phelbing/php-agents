@@ -1,10 +1,10 @@
 {
   "name": "php-agents",
-  "displayName": "Php Agents",
+  "displayName": "PHP Agents",
   "version": "1.0.0",
-  "description": "8 Subagents mit Modell-Routing (haiku/sonnet/opus) für PHP und Doctrine: Code-Suche, Tests, Review, Migrationen, Sicherheit, Performance, dazu PHP-Konventionen und Entwurfsmuster-Skill",
+  "description": "8 subagents with model routing (haiku/sonnet/opus) for PHP and Doctrine: code search, tests, review, migrations, security, performance, plus PHP conventions and a design patterns skill",
   "author": {
-    "name": "Patrick"
+    "name": "Patrick Helbing"
   },
   "license": "MIT",
   "keywords": [

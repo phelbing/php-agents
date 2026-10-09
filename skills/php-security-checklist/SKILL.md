@@ -3,28 +3,28 @@ name: php-security-checklist
 description: Use for security reviews of PHP code in any framework. Generic checklist for injection, XSS, deserialization, uploads, authentication, secrets and dependencies, with report format.
 ---
 
-# PHP-Sicherheitscheckliste
+# PHP security checklist
 
-Lade zuerst per Skill-Tool `developer-workflow-agents:engineering-conventions`, falls noch nicht geschehen (Secrets nie ausgeben).
+First load `developer-workflow-agents:engineering-conventions` through the Skill tool, if not done yet (never print secrets).
 
-## Prüfpunkte
+## Checks
 
-- **SQL-Injection:** gebundene Parameter bzw. Prepared Statements, kein String-Zusammenbau in SQL/DQL.
-- **Command Injection:** kein `exec`, `shell_exec`, `system` oder `proc_open` mit Nutzereingaben. Sonst feste Befehlsliste und `escapeshellarg`.
-- **XSS:** Ausgabe kontextgerecht escapen (HTML, Attribut, JavaScript, URL). Rohausgabe nur für bereinigte, vertrauenswürdige Inhalte.
-- **Unsichere Deserialisierung:** kein `unserialize()` auf Nutzerdaten, sonst mit `allowed_classes`. JSON bevorzugen.
-- **Datei-Uploads:** Typ serverseitig prüfen, Dateinamen nicht übernehmen, Zielpfad selbst festlegen, außerhalb des Webroots speichern.
-- **Pfad-Traversal:** Pfade normalisieren und gegen das Basisverzeichnis prüfen.
-- **SSRF und Open Redirect:** Ziel-URLs aus Nutzereingaben gegen eine Allowlist prüfen.
-- **Authentifizierung:** `password_hash` und `password_verify`, Zufall mit `random_bytes`, Token-Vergleich mit `hash_equals`, lose Vergleiche (`==`) bei Geheimnissen vermeiden.
-- **Zugriffskontrolle:** serverseitig und pro Objekt prüfen, nicht nur pro Route.
-- **Sessions und Cookies:** `HttpOnly`, `Secure`, `SameSite`.
-- **Fehlerausgabe:** keine Stacktraces oder Debug-Ausgaben in Produktion.
-- **Secrets:** Code, Konfiguration und Git-Historie auf Zugangsdaten prüfen. Gefundene Werte niemals ausgeben, nur die Fundstelle nennen.
-- **Abhängigkeiten:** `composer audit`, Pakete mit bekannten Lücken.
-- **Zahlungen und Webhooks:** Signatur prüfen, Idempotenz sicherstellen, Beträge serverseitig berechnen.
-- **Server und Docker:** offene Ports, Debug-Modus, Standard-Passwörter.
+- **SQL injection:** bound parameters or prepared statements, no string building in SQL/DQL.
+- **Command injection:** no `exec`, `shell_exec`, `system` or `proc_open` with user input. Otherwise a fixed command list and `escapeshellarg`.
+- **XSS:** escape output for its context (HTML, attribute, JavaScript, URL). Raw output only for sanitized, trusted content.
+- **Unsafe deserialization:** no `unserialize()` on user data, otherwise with `allowed_classes`. Prefer JSON.
+- **File uploads:** check the type on the server, do not take over file names, set the target path yourself, store outside the web root.
+- **Path traversal:** normalize paths and check them against the base directory.
+- **SSRF and open redirect:** check target URLs from user input against an allowlist.
+- **Authentication:** `password_hash` and `password_verify`, randomness with `random_bytes`, token comparison with `hash_equals`, avoid loose comparisons (`==`) with secrets.
+- **Access control:** check on the server and per object, not only per route.
+- **Sessions and cookies:** `HttpOnly`, `Secure`, `SameSite`.
+- **Error output:** no stack traces or debug output in production.
+- **Secrets:** check code, configuration and git history for credentials. Never print found values, only name the location.
+- **Dependencies:** `composer audit`, packages with known vulnerabilities.
+- **Payments and webhooks:** verify signatures, ensure idempotency, calculate amounts on the server.
+- **Server and Docker:** open ports, debug mode, default passwords.
 
-## Rückgabe
+## Report
 
-Nach Schwere (kritisch, hoch, mittel, niedrig): `datei:zeile`, Problem, Auswirkung, Fix-Vorschlag. Nichts gefunden: sagen, was geprüft wurde.
+By severity (critical, high, medium, low): `file:line`, problem, impact, fix proposal. Nothing found: say what was checked.

@@ -3,103 +3,103 @@ name: php-design-patterns
 description: Use when designing or refactoring PHP/Symfony code, choosing between design patterns, reviewing a class structure for over-engineering, or when a pattern name (Factory, Strategy, Decorator, Repository, Singleton, Service Locator and similar) comes up. Decision guide with when-to-use, pitfalls and Symfony equivalents for 35 patterns.
 ---
 
-# Entwurfsmuster in PHP und Symfony
+# Design patterns in PHP and Symfony
 
-Eigene Zusammenfassung zum Nachschlagen. Es sind keine Texte oder Codebeispiele aus den Quellen übernommen. Für Details und Beispielcode die Quellen öffnen:
+Own summary for reference. No texts or code examples are taken from the sources. For details and example code, open the sources:
 
-- Sammlung mit PHP-8-Code: https://designpatternsphp.readthedocs.io/en/latest/ (Repository: https://github.com/DesignPatternsPHP/DesignPatternsPHP, MIT)
-- Erklärungen zu den klassischen Mustern: https://refactoring.guru/design-patterns/php (urheberrechtlich geschützt, nur verlinken)
+- Collection with PHP 8 code: https://designpatternsphp.readthedocs.io/en/latest/ (repository: https://github.com/DesignPatternsPHP/DesignPatternsPHP, MIT)
+- Explanations of the classic patterns: https://refactoring.guru/design-patterns/php (copyrighted, link only)
 
-## Arbeitsregeln
+## Working rules
 
-1. **Erst das Problem, dann das Muster.** Benenne zuerst, was konkret weh tut: ein wachsendes `if/else`, schwer testbarer Code, harte Abhängigkeit, Duplikate. Ohne ein solches Problem kein Muster.
-2. **Erst Sprache und Framework prüfen.** Vieles ist schon gelöst: Konstruktor-Injektion und Autowiring (DI-Container), Enums, `readonly`-Klassen und -Eigenschaften, `match`, Attribute, First-Class-Callables, EventDispatcher, Messenger, Workflow-Komponente. Ein eigenes Muster nur, wenn das nicht reicht.
-3. **Kleinste Lösung zuerst.** Ein Interface mit einer einzigen Implementierung und ohne absehbare zweite ist selten nötig. Zwei Zeilen Duplikat sind besser als eine falsche Abstraktion.
-4. **Muster nicht in den Namen zwingen.** `UserFactoryStrategyManager` hilft keinem. Klassen nach ihrer Aufgabe benennen. Das Muster darf im Namen stehen, wenn es das Verständnis verbessert (z. B. `…Repository`, `…Decorator`).
-5. **Bestehende Konventionen im Projekt gehen vor.** Nachbarcode lesen und denselben Stil übernehmen.
-6. **Testbarkeit als Prüfstein.** Lässt sich die Abhängigkeit im Test ersetzen? Wenn nicht, ist die Kopplung zu hart.
+1. **Problem first, then the pattern.** First name what concretely hurts: a growing `if/else`, code that is hard to test, a hard dependency, duplication. No such problem, no pattern.
+2. **Check the language and the framework first.** Much is already solved: constructor injection and autowiring (DI container), enums, `readonly` classes and properties, `match`, attributes, first-class callables, EventDispatcher, Messenger, Workflow component. Write your own pattern only when that is not enough.
+3. **Smallest solution first.** An interface with a single implementation and no second one in sight is rarely needed. Two lines of duplication are better than a wrong abstraction.
+4. **Do not force patterns into names.** `UserFactoryStrategyManager` helps nobody. Name classes after their job. The pattern may appear in the name when it helps understanding (e.g. `…Repository`, `…Decorator`).
+5. **Existing project conventions take precedence.** Read the neighboring code and follow its style.
+6. **Testability as the touchstone.** Can the dependency be replaced in a test? If not, the coupling is too tight.
 
-## Entscheidungshilfe
+## Decision guide
 
-| Problem | Naheliegendes Muster |
+| Problem | Obvious pattern |
 |---|---|
-| Objekte brauchen Abhängigkeiten, die austauschbar und testbar sein sollen | Dependency Injection |
-| Verhalten (Algorithmus) soll zur Laufzeit wählbar sein | Strategy |
-| Verhalten soll um Zusatzfunktion erweitert werden, ohne die Klasse zu ändern | Decorator |
-| Fremde Schnittstelle passt nicht zur eigenen | Adapter |
-| Komplexes Subsystem braucht einen einfachen Einstieg | Facade |
-| Auf Ereignisse reagieren, ohne den Auslöser zu koppeln | Observer (EventDispatcher) |
-| Anfrage als Objekt: einreihen, protokollieren, wiederholen | Command (Messenger) |
-| Objekt mit vielen Optionen schrittweise aufbauen | Builder |
-| Wahl der konkreten Klasse nach Typ oder Konfiguration | Simple Factory oder Factory Method |
-| Zustandsabhängiges Verhalten, viele Statusprüfungen | State (Workflow-Komponente) |
-| Fachregeln kombinierbar und einzeln testbar machen | Specification |
-| Zugriff auf Domänenobjekte ohne Persistenz-Details | Repository |
-| Kein `null` mehr prüfen müssen | Null Object |
-| Baumstruktur einheitlich behandeln | Composite |
-| Gleichen Ablauf mit variablen Schritten wiederverwenden | Template Method |
-| Verarbeitung in Stufen, jede Stufe darf abbrechen | Chain of Responsibility |
+| Objects need dependencies that should be replaceable and testable | Dependency Injection |
+| Behavior (algorithm) should be selectable at runtime | Strategy |
+| Behavior should be extended without changing the class | Decorator |
+| A third-party interface does not fit your own | Adapter |
+| A complex subsystem needs a simple entry point | Facade |
+| React to events without coupling to the trigger | Observer (EventDispatcher) |
+| Request as an object: queue, log, retry | Command (Messenger) |
+| Build an object with many options step by step | Builder |
+| Choose the concrete class by type or configuration | Simple Factory or Factory Method |
+| State-dependent behavior, many status checks | State (Workflow component) |
+| Make business rules combinable and testable on their own | Specification |
+| Access domain objects without persistence details | Repository |
+| No more `null` checks | Null Object |
+| Treat a tree structure uniformly | Composite |
+| Reuse the same flow with variable steps | Template Method |
+| Processing in stages, each stage may abort | Chain of Responsibility |
 
-## Erzeugungsmuster
+## Creational patterns
 
-- **Abstract Factory** – erzeugt zusammengehörige Objekte einer "Familie", ohne dass der Aufrufer die konkreten Klassen kennt. Nutzen, wenn mehrere Varianten konsistent zusammenpassen müssen (z. B. Zahlungsanbieter mit passendem Client und Mapper). Vorsicht: viele Klassen, nur bei echten Familien.
-- **Builder** – setzt ein Objekt mit vielen Teilen oder Optionen Schritt für Schritt zusammen. Nutzen, wenn ein Konstruktor mit vielen optionalen Parametern unlesbar wird. Vorsicht: bei wenigen Parametern genügen benannte Argumente von PHP 8.
-- **Factory Method** – eine überschreibbare Methode entscheidet, welche konkrete Klasse entsteht. Nutzen, wenn Unterklassen den Typ bestimmen sollen. Vorsicht: bindet an Vererbung, oft ist Komposition (Simple Factory) einfacher.
-- **Simple Factory** – eine Fabrikklasse mit Instanzmethode erzeugt Objekte. Gut testbar, mehrere konfigurierte Fabriken möglich, per DI austauschbar. Meist die bessere Wahl gegenüber der Static Factory.
-- **Static Factory** – statische Methode, die passende Objekte liefert. Vorsicht: statischer Aufruf ist globale Kopplung, schwer zu mocken, nicht austauschbar. Eher für kleine Wertobjekte (benannte Konstruktoren wie `fromString()`), nicht für Services.
-- **Prototype** – neue Objekte entstehen durch Kopieren einer Vorlage. Nutzen, wenn das Erzeugen teuer ist und Kopien nur leicht abweichen. Vorsicht: Tiefe Kopie und `__clone` sauber umsetzen.
-- **Object Pool** – hält vorbereitete Objekte zur Wiederverwendung bereit. Lohnt sich bei teuren Ressourcen wie Verbindungen. Vorsicht: für leichte Objekte bremst es eher. In PHP-Requests selten sinnvoll, in langlaufenden Workern (Messenger, Swoole) eher.
-- **Singleton** – genau eine Instanz mit globalem Zugriff. Gilt allgemein als Anti-Pattern: versteckte Abhängigkeit, globaler Zustand, schlecht testbar. Stattdessen den DI-Container nutzen: Services sind dort standardmäßig geteilt (eine Instanz pro Container).
+- **Abstract Factory** – creates related objects of a "family" without the caller knowing the concrete classes. Use when several variants must fit together consistently (e.g. a payment provider with a matching client and mapper). Watch out: many classes, only for real families.
+- **Builder** – assembles an object with many parts or options step by step. Use when a constructor with many optional parameters becomes unreadable. Watch out: with few parameters, PHP 8 named arguments are enough.
+- **Factory Method** – an overridable method decides which concrete class is created. Use when subclasses should determine the type. Watch out: ties you to inheritance, composition (Simple Factory) is often simpler.
+- **Simple Factory** – a factory class with an instance method creates objects. Easy to test, several configured factories possible, replaceable via DI. Usually the better choice over the Static Factory.
+- **Static Factory** – a static method that returns suitable objects. Watch out: a static call is global coupling, hard to mock, not replaceable. Rather for small value objects (named constructors such as `fromString()`), not for services.
+- **Prototype** – new objects are created by copying a template. Use when creation is expensive and copies differ only slightly. Watch out: implement deep copies and `__clone` properly.
+- **Object Pool** – keeps prepared objects ready for reuse. Pays off for expensive resources such as connections. Watch out: for lightweight objects it tends to slow things down. Rarely useful in PHP requests, more so in long-running workers (Messenger, Swoole).
+- **Singleton** – exactly one instance with global access. Generally considered an anti-pattern: hidden dependency, global state, hard to test. Use the DI container instead: services are shared there by default (one instance per container).
 
-## Strukturmuster
+## Structural patterns
 
-- **Adapter** – übersetzt eine Schnittstelle in die erwartete. Nutzen für Fremdbibliotheken und SDKs: hinter eigener Schnittstelle kapseln, damit sich der Anbieter tauschen lässt.
-- **Bridge** – trennt Abstraktion und Implementierung in zwei Hierarchien, die unabhängig wachsen. Nutzen, wenn sonst Kombinationen explodieren (z. B. Nachrichtenart × Versandkanal). Vorsicht: bei zwei Varianten übertrieben.
-- **Composite** – Einzelobjekte und Gruppen teilen dieselbe Schnittstelle, so entsteht eine Baumstruktur (Menüs, Kategorien, Formulare). Vorsicht: Schnittstelle nicht mit Methoden aufblasen, die nur für Blätter oder nur für Knoten sinnvoll sind.
-- **Data Mapper** – überträgt Daten zwischen Datenbank und Domänenobjekten, beide kennen einander nicht. Das Domänenobjekt bleibt frei von Persistenz. Doctrine ORM arbeitet nach diesem Prinzip. Gegenpol: Active Record.
-- **Decorator** – umhüllt ein Objekt gleicher Schnittstelle und ergänzt Verhalten (Caching, Logging, Berechtigung). In Symfony: Service-Decoration (`#[AsDecorator]`). Vorsicht: lange Ketten sind schwer zu debuggen, Reihenfolge ist wichtig.
-- **Dependency Injection** – Abhängigkeiten kommen von außen, meist über den Konstruktor. Ergebnis: lose Kopplung, Austauschbarkeit, Testbarkeit. Standard in Symfony über Autowiring. Konstruktor-Injektion vor Setter-Injektion bevorzugen.
-- **Facade** – einfache Schnittstelle vor einem komplexen Subsystem. Nutzen für Anwendungsdienste, die mehrere Services koordinieren. Vorsicht: nicht zur "Gott-Klasse" werden lassen.
-- **Fluent Interface** – Methodenaufrufe werden verkettet, jede liefert das Objekt zurück. Lesbar für Builder und Query-Aufbau. Vorsicht: Bei veränderlichen Objekten sind Nebenwirkungen unsichtbar, bei Wertobjekten besser `with…()` mit neuer Instanz.
-- **Flyweight** – teilt gemeinsamen, unveränderlichen Zustand zwischen vielen Objekten, um Speicher zu sparen. Nur bei sehr vielen gleichartigen Objekten und gemessenem Speicherproblem.
-- **Proxy** – Stellvertreter mit derselben Schnittstelle, steuert den Zugriff (Lazy Loading, Zugriffsschutz, Caching). Doctrine nutzt Proxies für nachgeladene Entities, Symfony kennt Lazy Services. Vorsicht: Klassen sollten nicht `final` sein, wo Proxies sie erweitern müssen.
-- **Registry** – zentraler, global erreichbarer Speicher für Objekte. Erzeugt globalen Zustand und ist schwer zu mocken. Stattdessen DI.
+- **Adapter** – translates one interface into the expected one. Use for third-party libraries and SDKs: wrap them behind your own interface so the provider can be swapped.
+- **Bridge** – separates abstraction and implementation into two hierarchies that grow independently. Use when combinations would otherwise explode (e.g. message type × delivery channel). Watch out: overkill for two variants.
+- **Composite** – single objects and groups share the same interface, forming a tree structure (menus, categories, forms). Watch out: do not bloat the interface with methods that only make sense for leaves or only for nodes.
+- **Data Mapper** – moves data between the database and domain objects, neither knows the other. The domain object stays free of persistence. Doctrine ORM works on this principle. Counterpart: Active Record.
+- **Decorator** – wraps an object with the same interface and adds behavior (caching, logging, authorization). In Symfony: service decoration (`#[AsDecorator]`). Watch out: long chains are hard to debug, order matters.
+- **Dependency Injection** – dependencies come from outside, usually through the constructor. Result: loose coupling, replaceability, testability. Standard in Symfony via autowiring. Prefer constructor injection over setter injection.
+- **Facade** – a simple interface in front of a complex subsystem. Use for application services that coordinate several services. Watch out: do not let it become a "god class".
+- **Fluent Interface** – method calls are chained, each returns the object. Readable for builders and query construction. Watch out: with mutable objects side effects are invisible, for value objects prefer `with…()` returning a new instance.
+- **Flyweight** – shares common, immutable state between many objects to save memory. Only with very many similar objects and a measured memory problem.
+- **Proxy** – a stand-in with the same interface that controls access (lazy loading, access protection, caching). Doctrine uses proxies for lazily loaded entities, Symfony has lazy services. Watch out: classes should not be `final` where proxies need to extend them.
+- **Registry** – a central, globally reachable store for objects. Creates global state and is hard to mock. Use DI instead.
 
-## Verhaltensmuster
+## Behavioral patterns
 
-- **Chain of Responsibility** – eine Anfrage wandert durch Handler, einer bearbeitet sie oder reicht sie weiter. Beispiele: Messenger-Middleware, Validierungs- oder Berechtigungsstufen. Vorsicht: klar festlegen, was passiert, wenn niemand zuständig ist.
-- **Command** – verpackt eine Anfrage als Objekt, das sich übergeben, einreihen, protokollieren und wiederholen lässt. In Symfony: Messenger-Nachrichten mit Handler. Nachrichten unveränderlich und serialisierbar halten.
-- **Interpreter** – bildet die Regeln einer kleinen Sprache als Klassen ab und wertet Ausdrücke aus. Selten nötig. Für Ausdrücke vorher prüfen, ob die Symfony-Komponente ExpressionLanguage reicht.
-- **Iterator** – durchläuft eine Sammlung, ohne ihre Struktur offenzulegen. In PHP über `Iterator`, `IteratorAggregate` und Generatoren (`yield`). Generatoren sind für große Datenmengen speicherschonend.
-- **Mediator** – Objekte sprechen über eine Vermittlerinstanz statt direkt miteinander. Reduziert Abhängigkeiten. Vorsicht: Der Vermittler kann selbst zum Monolithen werden. Der EventDispatcher erfüllt eine ähnliche Rolle.
-- **Memento** – speichert den Zustand eines Objekts, um ihn später wiederherzustellen (Undo, Entwürfe). Der Schnappschuss bleibt unveränderlich und für Außenstehende undurchsichtig.
-- **Null Object** – ein Objekt, das nichts tut, ersetzt `null`. Der Aufrufer braucht keine Prüfung mehr. Beispiel: ein Logger, der nichts ausgibt (PSR-3 `NullLogger`). Kein GoF-Muster, aber verbreitet. Vorsicht: Nicht dort einsetzen, wo ein fehlender Wert ein echter Fehler wäre.
-- **Observer** – Beobachter melden sich an und werden bei Änderungen benachrichtigt. In Symfony: EventDispatcher mit Listenern und Subscribern. Vorsicht: Ablauf wird indirekt, Reihenfolge und Seiteneffekte dokumentieren, Listener schlank halten.
-- **Specification** – eine Fachregel als eigenes Objekt, das eine Ja/Nein-Frage beantwortet. Regeln lassen sich mit Und, Oder, Nicht kombinieren, ohne das geprüfte Objekt zu ändern. Gut für wiederverwendbare Geschäftsregeln. Vorsicht: bei einer einzelnen Regel reicht eine Methode.
-- **State** – Verhalten hängt vom inneren Zustand ab, jeder Zustand ist eine eigene Klasse. Ersetzt große `switch`-Blöcke auf einem Statusfeld. In Symfony bildet die Workflow-Komponente Zustände und erlaubte Übergänge ab. Bei einfachen Statuswerten reicht ein Enum.
-- **Strategy** – austauschbare Algorithmen hinter einer Schnittstelle. Ersetzt `if/else` auf einem Typ. In Symfony: markierte Services (Tags) per `tagged_iterator` sammeln. Bei einer reinen Funktion genügt oft ein Callable.
-- **Template Method** – Basisklasse legt den Ablauf fest, Unterklassen füllen einzelne Schritte. Vorsicht: Vererbung koppelt stark. Wenn die Schritte wechseln sollen, ist Strategy flexibler.
-- **Visitor** – trennt einen Algorithmus von den Objektstrukturen, auf denen er arbeitet. Nutzen, wenn viele verschiedene Operationen auf einer stabilen Klassenstruktur nötig sind. Vorsicht: Jede neue Elementklasse erzwingt Änderungen an allen Visitors.
+- **Chain of Responsibility** – a request passes through handlers, one handles it or passes it on. Examples: Messenger middleware, validation or authorization stages. Watch out: define clearly what happens when nobody is responsible.
+- **Command** – wraps a request as an object that can be passed on, queued, logged and retried. In Symfony: Messenger messages with a handler. Keep messages immutable and serializable.
+- **Interpreter** – models the rules of a small language as classes and evaluates expressions. Rarely needed. For expressions, check first whether the Symfony ExpressionLanguage component is enough.
+- **Iterator** – traverses a collection without exposing its structure. In PHP via `Iterator`, `IteratorAggregate` and generators (`yield`). Generators save memory for large data sets.
+- **Mediator** – objects talk through a mediator instead of directly with each other. Reduces dependencies. Watch out: the mediator can become a monolith itself. The EventDispatcher plays a similar role.
+- **Memento** – stores an object's state to restore it later (undo, drafts). The snapshot stays immutable and opaque to outsiders.
+- **Null Object** – an object that does nothing replaces `null`. The caller no longer needs a check. Example: a logger that outputs nothing (PSR-3 `NullLogger`). Not a GoF pattern, but common. Watch out: do not use it where a missing value would be a real error.
+- **Observer** – observers subscribe and are notified of changes. In Symfony: EventDispatcher with listeners and subscribers. Watch out: the flow becomes indirect, document order and side effects, keep listeners lean.
+- **Specification** – a business rule as its own object that answers a yes/no question. Rules can be combined with and, or, not, without changing the checked object. Good for reusable business rules. Watch out: for a single rule, a method is enough.
+- **State** – behavior depends on the internal state, each state is its own class. Replaces large `switch` blocks on a status field. In Symfony, the Workflow component models states and allowed transitions. For simple status values an enum is enough.
+- **Strategy** – interchangeable algorithms behind one interface. Replaces `if/else` on a type. In Symfony: collect tagged services via `tagged_iterator`. For a pure function, a callable is often enough.
+- **Template Method** – a base class defines the flow, subclasses fill in individual steps. Watch out: inheritance couples tightly. When the steps should vary, Strategy is more flexible.
+- **Visitor** – separates an algorithm from the object structures it works on. Use when many different operations are needed on a stable class structure. Watch out: every new element class forces changes to all visitors.
 
-## Weitere Muster
+## Other patterns
 
-- **Service Locator** – ein Objekt liefert Services auf Anfrage. Viele sehen darin ein Anti-Pattern, weil Abhängigkeiten versteckt bleiben und sich nicht im Konstruktor ablesen lassen. Den Container nicht in Klassen injizieren und von dort abfragen. Ausnahme: ein gezielt eingegrenzter, typisierter Locator (Symfony `ServiceLocator` über Tags) für wenige zur Laufzeit gewählte Services.
-- **Repository** – vermittelt zwischen Domäne und Datenzugriff, bietet Zugriff wie auf eine Sammlung von Domänenobjekten. Die Domäne kennt nur die Schnittstelle, nicht die Persistenz. Suchlogik gehört ins Repository, nicht in Controller und Services. Doctrine liefert Repository-Klassen mit.
-- **Entity-Attribute-Value (EAV)** – speichert Eigenschaften als Name-Wert-Paare statt als feste Spalten. Nur bei sehr vielen möglichen, selten belegten Attributen. Vorsicht: schwer abzufragen und zu validieren, Abfragen werden langsam. Erst prüfen, ob JSON-Spalten oder getrennte Tabellen reichen.
+- **Service Locator** – an object returns services on request. Many consider it an anti-pattern because dependencies stay hidden and cannot be read from the constructor. Do not inject the container into classes and fetch services from it. Exception: a deliberately narrow, typed locator (Symfony `ServiceLocator` via tags) for a few services chosen at runtime.
+- **Repository** – mediates between the domain and data access, offers access like a collection of domain objects. The domain only knows the interface, not the persistence. Query logic belongs in the repository, not in controllers and services. Doctrine ships repository classes.
+- **Entity-Attribute-Value (EAV)** – stores properties as name-value pairs instead of fixed columns. Only for very many possible, rarely filled attributes. Watch out: hard to query and validate, queries get slow. First check whether JSON columns or separate tables are enough.
 
-## Typische Fehlgriffe, auf die du achten sollst
+## Typical mistakes to watch for
 
-- Singleton, Registry und Service Locator als Abkürzung für fehlende Konstruktor-Injektion.
-- Statische Methoden mit Zustand oder Seiteneffekten.
-- Interfaces ohne zweite Implementierung und ohne Testbedarf.
-- Vererbungsketten, wo Komposition einfacher wäre (Template Method, Factory Method).
-- Muster als Selbstzweck: mehr Klassen, aber kein gelöstes Problem.
-- Fachlogik in Controllern oder Listenern statt in Domänen- oder Anwendungsdiensten.
-- Fachliche Prüfungen verstreut statt gebündelt (Specification oder eigene Methode am Objekt).
+- Singleton, Registry and Service Locator as a shortcut for missing constructor injection.
+- Static methods with state or side effects.
+- Interfaces without a second implementation and without a testing need.
+- Inheritance chains where composition would be simpler (Template Method, Factory Method).
+- Patterns for their own sake: more classes, but no solved problem.
+- Business logic in controllers or listeners instead of domain or application services.
+- Business checks scattered instead of bundled (Specification or a method on the object).
 
-## Vorgehen bei Entwurf und Review
+## Approach for design and review
 
-1. Problem in einem Satz formulieren.
-2. Prüfen, ob PHP 8 oder Symfony es schon lösen.
-3. Falls nicht: die einfachste passende Lösung wählen, das Muster optional benennen.
-4. Im Review nach diesen Fragen prüfen: Welches Problem löst die Abstraktion? Gibt es dafür einen Test oder einen zweiten Anwendungsfall? Bleibt der Code ohne das Muster einfacher?
+1. State the problem in one sentence.
+2. Check whether PHP 8 or Symfony already solves it.
+3. If not: choose the simplest fitting solution, optionally name the pattern.
+4. In a review, check with these questions: Which problem does the abstraction solve? Is there a test or a second use case for it? Would the code be simpler without the pattern?

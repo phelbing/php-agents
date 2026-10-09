@@ -3,42 +3,42 @@ name: php-conventions
 description: Use when writing, changing, testing or reviewing PHP code in any framework. Coding, design, database and test conventions for modern PHP 8, built on the shared engineering conventions.
 ---
 
-# PHP-Konventionen
+# PHP conventions
 
-Lade zuerst per Skill-Tool `developer-workflow-agents:engineering-conventions`, falls noch nicht geschehen. Die Regeln dort gelten weiter. Dieser Skill ergänzt nur, was PHP-spezifisch ist.
+First load `developer-workflow-agents:engineering-conventions` through the Skill tool, if not done yet. The rules there still apply. This skill only adds what is specific to PHP.
 
-Konfiguration und Nachbarcode des Projekts gehen vor (Code-Style-Konfiguration, `phpstan.neon`). Die PHP-Version steht in `composer.json` (`require.php`). Keine Sprachfeatures nutzen, die darüber liegen.
+The project's configuration and neighboring code take precedence (code style configuration, `phpstan.neon`). The PHP version is in `composer.json` (`require.php`). Do not use language features above it.
 
-## Sprache und Stil
+## Language and style
 
-- `declare(strict_types=1);` in jeder Datei.
-- Typen überall: Parameter, Rückgaben, Properties. `mixed` vermeiden. Docblock-Typen nur dort, wo die Sprache sie nicht ausdrücken kann (z. B. `array<int, Foo>`).
-- Wertobjekte unveränderlich: `readonly`-Properties (ab 8.1), `readonly`-Klassen (ab 8.2).
-- Enums statt String- oder Int-Konstanten für feste Wertemengen (ab 8.1). `match` statt langer `if`/`switch`-Ketten, wenn jeder Zweig einen Wert liefert.
-- Constructor Promotion nutzen, bei vielen Parametern benannte Argumente.
-- Strikte Vergleiche (`===`), `==` nur mit Begründung. Geheimnisse mit `hash_equals` vergleichen.
-- Stil nach PER Coding Style (Nachfolger von PSR-12), Autoloading nach PSR-4.
+- `declare(strict_types=1);` in every file.
+- Types everywhere: parameters, return values, properties. Avoid `mixed`. Docblock types only where the language cannot express them (e.g. `array<int, Foo>`).
+- Value objects immutable: `readonly` properties (from 8.1), `readonly` classes (from 8.2).
+- Enums instead of string or int constants for fixed sets of values (from 8.1). `match` instead of long `if`/`switch` chains when every branch returns a value.
+- Use constructor promotion, named arguments when there are many parameters.
+- Strict comparisons (`===`), `==` only with a reason. Compare secrets with `hash_equals`.
+- Style according to PER Coding Style (successor of PSR-12), autoloading according to PSR-4.
 
-## Entwurf
+## Design
 
-- Abhängigkeiten per Konstruktor injizieren. Kein `new` für Services, keine statischen Aufrufe mit Zustand, kein globaler Zustand.
-- Kleine Klassen mit einer Aufgabe. Fachlogik gehört in Domänen- oder Anwendungsdienste, nicht in Controller, Konsolenbefehle oder Listener.
-- Eigene, sprechende Exceptions statt generischer. Fehler nicht verschlucken, Exceptions nicht zur normalen Ablaufsteuerung nutzen.
-- `null` bewusst einsetzen: Rückgabetyp `?Foo` nur, wenn "nicht vorhanden" ein normaler Fall ist, sonst Exception.
-- Entwurfsmuster nur bei konkretem Problem. Referenz: Skill `php-agents:php-design-patterns`.
+- Inject dependencies through the constructor. No `new` for services, no static calls with state, no global state.
+- Small classes with one job. Business logic belongs in domain or application services, not in controllers, console commands or listeners.
+- Own, meaningful exceptions instead of generic ones. Do not swallow errors, do not use exceptions for normal control flow.
+- Use `null` deliberately: return type `?Foo` only when "not present" is a normal case, otherwise an exception.
+- Design patterns only for a concrete problem. Reference: skill `php-agents:php-design-patterns`.
 
-## Datenbank und Doctrine
+## Database and Doctrine
 
-- Zugriff über Repositories, keine verstreuten Queries. Parameter binden, nie Werte in SQL/DQL konkatenieren.
-- Keine Queries in Schleifen (N+1): Beziehungen per Join mit `addSelect` laden oder in Blöcken abfragen.
-- Mehrteilige Schreibvorgänge in einer Transaktion. `flush()` gebündelt, nicht pro Objekt in einer Schleife.
-- Große Mengen in Blöcken verarbeiten und den Speicher mit `clear()` freigeben.
-- Schema-Änderungen nur über Migrationen. Jede Migration vor dem Ausführen prüfen lassen (Agent `php-agents:doctrine-migration-reviewer`). Entity-Mapping und Migration müssen übereinstimmen.
+- Access through repositories, no scattered queries. Bind parameters, never concatenate values into SQL/DQL.
+- No queries in loops (N+1): load relations with a join and `addSelect`, or query in batches.
+- Multi-part writes in one transaction. `flush()` in bulk, not per object in a loop.
+- Process large sets in batches and free memory with `clear()`.
+- Schema changes only through migrations. Have every migration reviewed before it runs (agent `php-agents:doctrine-migration-reviewer`). Entity mapping and migration must match.
 
-## Tests und Werkzeuge
+## Tests and tooling
 
-- Befehle aus `composer.json` (`scripts`) oder `Makefile` übernehmen. Static Analysis (PHPStan/Psalm) und Code-Style (ECS/PHP-CS-Fixer) mit der Konfiguration des Projekts.
-- PHPUnit: Arrange-Act-Assert, ein Verhalten pro Test, sprechende Testnamen. Mocks nur an den Grenzen (I/O, Zeit, Netz), eigene Wertobjekte nicht mocken.
-- Unit-Tests ohne Datenbank. Datenbankzugriffe in Integrationstests gegen die Test-Datenbank.
-- Edge Cases abdecken: leere Werte, Grenzwerte, Fehlerpfade.
-- Findest du beim Testen einen Bug im Produktionscode, melde ihn und behebe ihn nicht ungefragt.
+- Take the commands from `composer.json` (`scripts`) or the `Makefile`. Static analysis (PHPStan/Psalm) and code style (ECS/PHP-CS-Fixer) with the project's configuration.
+- PHPUnit: Arrange-Act-Assert, one behavior per test, meaningful test names. Mocks only at the boundaries (I/O, time, network), do not mock your own value objects.
+- Unit tests without a database. Database access in integration tests against the test database.
+- Cover edge cases: empty values, boundary values, error paths.
+- If you find a bug in production code while testing, report it and do not fix it unasked.

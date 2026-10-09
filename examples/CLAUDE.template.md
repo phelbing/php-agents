@@ -1,18 +1,18 @@
-# Vorlage für die CLAUDE.md im Projekt
+# Template for the project CLAUDE.md
 
-Ein Plugin kann keine `CLAUDE.md` mitliefern, die automatisch geladen wird. Diesen Block in die eigene `CLAUDE.md` übernehmen. Er verweist nur auf die Skills und wiederholt keine Regeln, damit sie nur an einer Stelle gepflegt werden.
+A plugin cannot ship a `CLAUDE.md` that is loaded automatically. Copy this block into your own `CLAUDE.md`. It only points to the skills and does not repeat any rules, so they are maintained in one place.
 
 ---
 
 ## PHP
 
-- Konventionen: Skill `php-agents:php-conventions` (zieht `developer-workflow-agents:engineering-conventions` mit).
-- Delegation und Pflicht-Einsatz: Skill `php-agents:php-delegation-routing`.
-- Vor jedem Commit: `php-code-reviewer`. Bei jeder Migration: `doctrine-migration-reviewer`. Bei Zahlung, Login und Berechtigungen: `php-security-auditor`.
+- Conventions: skill `php-agents:php-conventions` (pulls in `developer-workflow-agents:engineering-conventions`).
+- Delegation and mandatory use: skill `php-agents:php-delegation-routing`.
+- Before every commit: `php-agents:php-code-reviewer`. For every migration: `php-agents:doctrine-migration-reviewer`. For payment, login and permissions: `php-agents:php-security-auditor`.
 
-## Projektspezifisch (hier eintragen)
+## Project-specific (fill in)
 
-- PHP-Version: `...`
-- Docker-Servicename: `...`
-- Testbefehl, z. B. `docker compose exec <service> vendor/bin/phpunit`: `...`
-- Static Analysis und Code-Style: `...`
+- PHP version: `...`
+- Docker service name: `...`
+- Test command, e.g. `docker compose exec <service> vendor/bin/phpunit`: `...`
+- Static analysis and code style: `...`

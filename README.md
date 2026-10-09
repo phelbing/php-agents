@@ -1,10 +1,10 @@
 # php-agents
 
-8 Subagents mit Modell-Routing (haiku, sonnet, opus) für PHP und Doctrine: Code-Suche, Tests, Review, Migrationen, Sicherheit und Performance. Dazu PHP-Konventionen und ein Skill mit Entwurfsmustern. Funktioniert mit jedem PHP-Framework. Für Symfony-Projekte ergänzt `symfony-agents` (eigenes Repo).
+8 subagents with model routing (haiku, sonnet, opus) for PHP and Doctrine: code search, tests, review, migrations, security and performance. Plus PHP conventions and a skill with design patterns. Works with any PHP framework. For Symfony projects, `symfony-agents` adds to it (separate repo).
 
 ## Installation
 
-`php-agents` baut auf `developer-workflow-agents` auf. Die Marketplaces der Abhängigkeiten müssen vorher hinzugefügt sein, sonst lädt das Plugin nicht:
+`php-agents` builds on `developer-workflow-agents`. The marketplaces of the dependencies must be added first, otherwise the plugin does not load:
 
 ```bash
 claude plugin marketplace add <owner>/developer-workflow-agents
@@ -12,63 +12,64 @@ claude plugin marketplace add <owner>/php-agents
 claude plugin install php-agents@php-agents
 ```
 
-Die Abhängigkeit `developer-workflow-agents` wird dabei automatisch mitinstalliert. Danach in Claude Code `/agents` ausführen. Die Agents heißen mit Plugin-Präfix, z. B. `php-agents:php-code-reviewer`.
+The dependency `developer-workflow-agents` is installed automatically. Then run `/agents` in Claude Code. The agents carry the plugin prefix, e.g. `php-agents:php-code-reviewer`.
 
-## Enthalten
+## Contents
 
-| Modell | Agents |
+| Model | Agents |
 |---|---|
-| opus | php-security-auditor |
-| sonnet | php-implementer, php-test-writer, php-code-reviewer, php-performance-analyst, doctrine-migration-reviewer |
+| opus | php-security-auditor, doctrine-migration-reviewer |
+| sonnet | php-implementer, php-test-writer, php-code-reviewer, php-performance-analyst |
 | haiku | php-code-explorer, php-test-runner |
 
 Skills:
-- `php-conventions`: Stil, Entwurf, Datenbank/Doctrine, Tests und Werkzeuge für modernes PHP 8.
-- `php-security-checklist`: allgemeine PHP-Sicherheitscheckliste mit Rückgabeformat.
-- `php-design-patterns`: Entscheidungshilfe mit Einsatz, Fallstricken und Symfony-Entsprechungen für 35 Entwurfsmuster. Beim Aufruf etwa 6.000 Tokens.
-- `php-delegation-routing`: Routing-Tabelle und Pflicht-Einsatz.
+- `php-conventions`: style, design, database/Doctrine, tests and tooling for modern PHP 8.
+- `php-security-checklist`: generic PHP security checklist with report format.
+- `php-design-patterns`: decision guide with use cases, pitfalls and Symfony equivalents for 35 design patterns.
+- `php-delegation-routing`: routing table and mandatory use.
 
-## Aufbau der Konventionen
+## Structure of the conventions
 
-Jede Regel steht genau einmal, auf der allgemeinsten Ebene, für die sie gilt. Höhere Ebenen laden die tieferen und ergänzen nur.
+Every rule exists exactly once, on the most general level it applies to. Higher levels load the lower ones and only add to them.
 
-| Ebene | Plugin | Skill |
+| Level | Plugin | Skill |
 |---|---|---|
-| Basis (alle Stacks) | developer-workflow-agents | `engineering-conventions` |
+| Base (all stacks) | developer-workflow-agents | `engineering-conventions` |
 | PHP | php-agents | `php-conventions`, `php-security-checklist`, `php-design-patterns` |
 | Symfony | symfony-agents | `symfony-conventions`, `symfony-security-checklist` |
 
-Die Agents laden ihren Skill über das Skill-Tool, der Skill lädt die Ebene darunter. Lässt sich ein Skill nicht laden, melden die Agents das in der Rückgabe.
+The agents load their skills at startup through the `skills` field in the frontmatter, including all levels below. In the main conversation, a skill loads the level below through the Skill tool. If a skill cannot be loaded, the agents say so in their report.
 
-## Quellen des Muster-Skills
+## Sources of the patterns skill
 
-Der Skill ist eine eigene Zusammenfassung in eigenen Worten. Texte und Codebeispiele sind nicht übernommen. Die Quellen:
+The skill is an own summary in own words. No texts or code examples are taken over. The sources:
 
-- [Design Patterns PHP](https://designpatternsphp.readthedocs.io/en/latest/) (Repository unter MIT-Lizenz)
-- [Refactoring.Guru: Design Patterns in PHP](https://refactoring.guru/design-patterns/php) (urheberrechtlich geschützt, nur verlinkt)
+- [Design Patterns PHP](https://designpatternsphp.readthedocs.io/en/latest/) (repository under the MIT license)
+- [Refactoring.Guru: Design Patterns in PHP](https://refactoring.guru/design-patterns/php) (copyrighted, linked only)
 
-## Empfohlene Ergänzungen im eigenen Projekt
+## Recommended additions to your project
 
-Ein Plugin lädt keine `CLAUDE.md` und keine Berechtigungen ins Projekt. Beides liegt als Vorlage unter `examples/`:
+A plugin does not load a `CLAUDE.md` or permissions into the project. Both are provided as templates under `examples/`:
 
-- `examples/CLAUDE.template.md`: Block für die eigene `CLAUDE.md`. Docker-Servicenamen und Testbefehle eintragen.
-- `examples/settings.json`: Berechtigungen für `.claude/settings.json`. Erlaubt `docker compose exec`, `composer audit` und lesende `git`-Befehle, sperrt `ssh`/`scp`/`rsync` und das Lesen von `.env*`. `docker compose exec` erlaubt beliebige Befehle im Container und ist für die lokale Entwicklung gedacht.
+- `examples/CLAUDE.template.md`: block for your own `CLAUDE.md`. Fill in the Docker service names and test commands.
+- `examples/settings.json`: permissions for `.claude/settings.json`. Allows `docker compose exec`, `composer audit` and read-only `git` commands, blocks `ssh`/`scp`/`rsync` and reading `.env*`. `docker compose exec` allows any command in the container and is meant for local development.
 
-## Hinweise
+## Notes
 
-- `CLAUDE_CODE_SUBAGENT_MODEL` nicht setzen, sonst überschreibt die Variable die `model:`-Zeilen aller Agents.
-- Modell eines Agents ändern: Zeile `model:` im Frontmatter unter `agents/`.
-- Fremde Agents vor dem Einsatz lesen und Tool-Rechte prüfen.
-- Review-Agents haben `Bash` für `git diff`. "Nur lesend" ist dort eine Anweisung, keine technische Sperre. Wer das hart will, entfernt `Bash` und übergibt den Diff im Prompt.
+- Do not set `CLAUDE_CODE_SUBAGENT_MODEL`, otherwise the variable overrides the `model:` lines of all agents.
+- To change an agent's model: the `model:` line in the frontmatter under `agents/`.
+- Read third-party agents before using them and check their tool permissions.
+- Review agents have `Bash` for `git diff`. "Read-only" is an instruction there, not a technical block. If you want it enforced, remove `Bash` and pass the diff in the prompt.
+- The `deny` rules in `examples/settings.json` match the command as written. `rm -fr` or `/bin/rm -rf` are not covered. The rules guard against mistakes, they are not a hard block.
 
-## Für Maintainer
+## For maintainers
 
 ```bash
 claude plugin validate ./
 ```
 
-`version` in `.claude-plugin/plugin.json` ist gesetzt. Nutzer bleiben auf dieser Version, bis du sie erhöhst. Abhängigkeiten ohne Versionsbereich folgen dem jeweils aktuellen Stand der anderen Plugins. Für feste Versionsbereiche die Releases mit `claude plugin tag --push` taggen und die Bereiche in `dependencies` eintragen.
+`version` in `.claude-plugin/plugin.json` is set. Users stay on this version until you raise it. Dependencies without a version range follow the current state of the other plugins. For fixed version ranges, tag the releases with `claude plugin tag --push` and add the ranges to `dependencies`.
 
-## Lizenz
+## License
 
-MIT, siehe `LICENSE`.
+MIT, see `LICENSE`.
